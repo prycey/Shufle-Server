@@ -107,7 +107,7 @@ ParseRequest.postCloudCodeData = function() {
     });
   
   //XHR.POST('/parse/functions/hello');
-  XHR.POST('/parse/functions/create_card_batch');
+  //XHR.POST('/parse/functions/create_card_batch');
 }
 
 
@@ -151,7 +151,6 @@ XHR.setCallback = function(callback, failureCallback) {
 }
 
 XHR.POST = function(path, callback) {
-  console.log(path);
   var seed = {"score":1337,"playerName":"Sean Plott","cheatMode":false}
   this.xhttp.open("POST", Config.getUrl() + path, true);
   this.xhttp.setRequestHeader("X-Parse-Application-Id", $('#appId').val());
