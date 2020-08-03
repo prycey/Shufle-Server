@@ -104,8 +104,10 @@ ParseRequest.postCloudCodeData = function() {
     },
     function(error) {
     	Steps.fillStepError('#step-3-error', 'There was a failure: ' + error);
-    });  
+    });
+  
   XHR.POST('/parse/functions/hello');
+  XHR.POST('/parse/functions/create_card_batch');
 }
 
 
