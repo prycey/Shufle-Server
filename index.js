@@ -12,6 +12,9 @@ var cloudCodeMain = __dirname + '/cloud/main.js';
 
 // must have a database configured
 assert(databaseUri);
+assert(process.env.APP_ID);
+assert(process.env.MASTER_KEY);
+assert(process.env.SERVER_URL);
 
 var api = new ParseServer({
   databaseURI: databaseUri,

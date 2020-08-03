@@ -107,7 +107,7 @@ ParseRequest.postCloudCodeData = function() {
     });
   
   //XHR.POST('/parse/functions/hello');
-  //XHR.POST('/parse/functions/create_card_batch');
+  XHR.POST('/parse/functions/create_card_batch');
 }
 
 
