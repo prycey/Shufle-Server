@@ -4,7 +4,7 @@ Parse.Cloud.define('hello', function(req, res) {
 
 Parse.Cloud.define('create_card_batch', async function(req, res) {
   const UserClass = Parse.Object.extend("User");
-  const query = Parse.Query(UserClass);
+  const query = new Parse.Query(UserClass);
   query.equalTo("username", "katie");
   const userObj = await query.find();
 
