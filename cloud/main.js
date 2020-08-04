@@ -2,6 +2,7 @@ Parse.Cloud.define('hello', function(req, res) {
   return 'Hi';
 });
 
+
 Parse.Cloud.define('create_card_batch', async function(req, res) {
   const UserClass = Parse.Object.extend("User");
   const query = new Parse.Query(UserClass);
@@ -16,7 +17,7 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
   let cardList = [];
   const CardClass = Parse.Object.extend("Card");
 
-  cards.forEach((card) => {
+  await Promise.all(cards.map(async (card) => {
     console.log("card", card);
     const CardQuery = new Parse.Query(CardClass);
     CardQuery.equalTo("objectId", card.get("objectId"));
@@ -28,7 +29,8 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
     });
 
     console.log(resCard);
-  });
+  }));
+
   console.log(cardList);
 
   return cardList;
