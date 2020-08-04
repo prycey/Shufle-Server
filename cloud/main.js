@@ -2,15 +2,18 @@ Parse.Cloud.define('hello', function(req, res) {
   return 'Hi';
 });
 
-Parse.Cloud.define('create_card_batch', function(req, res) {
+Parse.Cloud.define('create_card_batch', async function(req, res) {
+  const UserClass = Parse.Object.extend("User");
+  const query = Parse.Query(UserClass);
+  query.equalTo("username", "katie");
+  const userObj = await query.find();
+
+  const card1 = userObj.get("cards")[0];
+
   return [
     {
-      question: "What is my dog's name?",
-      answer: "Remy"
-    },
-    {
-      question: "What is my favorite song?",
-      answer: "..."
+      question: card1.get("question"),
+      answer: card1.get("answer")
     }
   ];
 });
