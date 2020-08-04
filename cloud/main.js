@@ -11,15 +11,17 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
   console.log(userObjs);
 
   const card1 = userObjs[0].get("cards")[0];
+  const q = card1.get("question");
+  const a = card1.get("answer");
 
   console.log(card1);
-  console.log(card1.get("question"));
-  console.log(card1.get("answer"));
+  console.log(q);
+  console.log(a);
 
   return [
     {
-      question: card1.get("question"),
-      answer: card1.get("answer")
+      question: q,
+      answer: a
     }
   ];
 });
