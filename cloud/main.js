@@ -4,36 +4,27 @@ Parse.Cloud.define('hello', function(req, res) {
 
 
 Parse.Cloud.define('create_card_batch', async function(req, res) {
-  console.log("user:", req.user);
-  let cardList = [];
-  /*
+  const user = req.user;
+
   const CardClass = Parse.Object.extend("Card");
   const query = new Parse.Query(CardClass);
-  query.equalTo("username", "katie");
-  const userObjs = await query.find();
+  query.equalTo("owner", user);
+  const cards = await query.find();
 
-  console.log(userObjs);
-
-  const cards = userObjs[0].get("cards");
   console.log(cards);
 
   let cardList = [];
 
-  await Promise.all(cards.map(async (card) => {
-    console.log("card", card, card.get("objectId"));
-    const CardQuery = new Parse.Query(CardClass);
-    CardQuery.equalTo("objectId", card.get("objectId"));
-    const resCard = await CardQuery.find();
-    console.log("rescard", resCard);
+  cards.forEach((card) => {
+    console.log("card", card);
 
     cardList.push({
-      question: resCard[0].get("question"),
-      answer: resCard[0].get("answer")
+      question: card.get("question"),
+      answer: card.get("answer")
     });
+  });
 
-  }));
-
-  console.log(cardList);*/
+  console.log(cardList);
 
   return cardList;
 });
