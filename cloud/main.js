@@ -4,7 +4,7 @@ Parse.Cloud.define('hello', function(req, res) {
 
 
 Parse.Cloud.define('create_card_batch', async function(req, res) {
-  console.log(req.user);
+  console.log(req);
   let cardList = [];
   /*
   const CardClass = Parse.Object.extend("Card");
