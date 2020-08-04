@@ -16,8 +16,6 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
   let cardList = [];
 
   cards.forEach((card) => {
-    console.log("card", card);
-
     cardList.push({
       question: card.get("question"),
       answer: card.get("answer")
