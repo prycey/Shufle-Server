@@ -21,7 +21,7 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
     console.log("card", card);
     const CardQuery = new Parse.Query(CardClass);
     CardQuery.equalTo("objectId", card.get("objectId"));
-    const resCard = await query.find();
+    const resCard = await CardQuery.find();
     console.log("rescard", resCard);
 
     cardList.push({
