@@ -9,7 +9,7 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
   const CardClass = Parse.Object.extend("Card");
   const query = new Parse.Query(CardClass);
   query.equalTo("owner", user);
-  const cards = await query.find();
+  const cards = await query.find({ useMasterKey: true });
 
   console.log(cards);
 
