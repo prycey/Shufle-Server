@@ -14,6 +14,12 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
   userQuery.limit(5);
   const randomUsers = await userQuery.find({ useMasterKey: true });
 
+  if (randomUsers.length === 0) {
+    // no users found
+    console.log("found nobody!");
+    return [];
+  }
+
   // query for these users' cards
   const CardClass = Parse.Object.extend("Card");
   let queryList = [];
