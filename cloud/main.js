@@ -23,7 +23,7 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
     queryList.push(query);
   });
 
-  const cardQuery = Parse.Query.or(queryList);
+  const cardQuery = Parse.Query.or(queryList[0], queryList[1]);
   const cards = await cardQuery.find({ useMasterKey: true });
 
   console.log(cards);
