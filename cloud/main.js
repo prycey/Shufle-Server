@@ -8,7 +8,7 @@ Parse.Cloud.define('hello', function(req, res) {
 Parse.Cloud.define('create_card_batch', async function(req, res) {
   const user = req.user;
 
-  const UserClass = Parse.Object.extend("User");
+  const UserClass = Parse.Object.extend("_User");
   const userQuery = new Parse.Query(UserClass);
   userQuery.notEqualTo("objectId", user.get("objectId"));
   userQuery.limit(5);
