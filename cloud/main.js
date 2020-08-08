@@ -20,6 +20,7 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
 
   const userQuery = new Parse.Query("_User");
   userQuery.notEqualTo("objectId", user.id);
+  userQuery.notEqualTo("seen_users", user.id);
   userQuery.limit(5);
   const randomUsers = await userQuery.find({ useMasterKey: true });
 
@@ -29,20 +30,18 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
     return [];
   }
 
-  let seen_users = user.relation("seen_users");
-
   // query for these users' cards
   const CardClass = Parse.Object.extend("Card");
   let queryList = [];
   randomUsers.forEach((user) => {
-
-    seen_users.add(user);
 
     const query = new Parse.Query(CardClass);
     query.equalTo("owner", user);
     queryList.push(query);
   });
 
+
+  let seen_users = user.relation("seen_users");
   // save the relation
   user.save(null, { useMasterKey: true });
 
