@@ -5,6 +5,12 @@ Parse.Cloud.define('hello', function(req, res) {
 });
 
 
+Parse.Cloud.afterSave("_User", (request) => {
+  console.log(request);
+});
+
+
+
 Parse.Cloud.define('create_card_batch', async function(req, res) {
   const user = req.user;
 
