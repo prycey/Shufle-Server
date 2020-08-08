@@ -44,7 +44,7 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
   });
 
   // save the relation
-  user.save();
+  user.save({ useMasterKey: true });
 
   console.log("users", randomUsers);
   console.log("queries", queryList);
