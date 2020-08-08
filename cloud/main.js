@@ -5,9 +5,13 @@ Parse.Cloud.define('hello', function(req, res) {
 });
 
 
-Parse.Cloud.afterSave("_User", (request) => {
-  console.log(request);
-});
+// Parse.Cloud.afterSave("_User", (request) => {
+//   const user = request.object;
+//   if (user.get("seen_users") === undefined) {
+//     rel = Parse.Relation();
+//     user.set("seen_users", );
+//   }
+// });
 
 
 
@@ -25,10 +29,15 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
     return [];
   }
 
+  let seen_users = user.relation("seen_users");
+
   // query for these users' cards
   const CardClass = Parse.Object.extend("Card");
   let queryList = [];
   randomUsers.forEach((user) => {
+
+    seen_users.add(user);
+
     const query = new Parse.Query(CardClass);
     query.equalTo("owner", user);
     queryList.push(query);
