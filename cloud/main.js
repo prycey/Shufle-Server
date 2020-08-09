@@ -18,7 +18,7 @@ function queryOrAll(queryList) {
     let resList = [...queryList];
     let dif = 1;
     while (dif < queryList.length) {
-        for (let i = 0; i < totLength - dif; i += (2 * dif)) {
+        for (let i = 0; i < queryList.length - dif; i += (2 * dif)) {
             resList[i] = Parse.Query.or(resList[i], resList[i + dif]);
         }
         dif *= 2;
