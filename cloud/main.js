@@ -14,7 +14,6 @@ async function getUserTempStorage(user) {
 
     let tempStorage;
     let tempStorageId = user.get("temp_storage");
-    console.log(tempStorageId);
     if (tempStorageId === undefined) {
         // have not yet created temporary storage
         tempStorage = new TempStorage();
@@ -25,7 +24,6 @@ async function getUserTempStorage(user) {
         const tempStorageQuery = new Parse.Query(TempStorage);
         tempStorage = await tempStorageQuery.get(tempStorageId.id, { useMasterKey: true });
     }
-    console.log(tempStorage);
     return tempStorage;
 }
 
@@ -33,6 +31,8 @@ async function getUserTempStorage(user) {
 
 Parse.Cloud.define('create_card_batch', async function(req, res) {
     let user = req.user;
+
+    let tempStoragePromise = getUserTempStorage(user);
 
     // query 5 random users, excluding ourself, who we have not yet seen
     // (whenever another user's cards have been dealt to someone, they add
@@ -84,7 +84,9 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
 
     console.log(cardList);
 
-    getUserTempStorage(user);
+    let tempStorage = await tempStoragePromise;
+    tempStorage.set("card_list", cards);
+    tempStorage.save(null, { useMasterKey: true });
 
     return cardList;
 });
