@@ -9,12 +9,22 @@ const { User } = require("parse");
 // });
 
 
-function getUserTempStorage(user) {
-    let tempStorageId = user.get("temp_storage");
-    console.log("tmp:", tempStorageId);
-    if (tempStorageId === undefined) {
+async function getUserTempStorage(user) {
+    const TempStorage = Parse.Object.extend("TempStorage");
 
+    let tempStorage;
+    let tempStorageId = user.get("temp_storage");
+    if (tempStorageId === undefined) {
+        // have not yet created temporary storage
+        tempStorage = new TempStorage();
+        user.set("temp_storage", tempStorage);
+        await user.save();
     }
+    else {
+        const tempStorageQuery = new Parse.Query(TempStorage);
+        tempStorage = await tempStorageQuery.get(tempStorageId);
+    }
+    return tempStorage;
 }
 
 
