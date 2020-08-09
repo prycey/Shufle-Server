@@ -22,7 +22,7 @@ function queryOrAll(queryList) {
         for (; i < totLength - 1; i += 2) {
             resList[i >> 1] = Parse.Query.or(resList[i], resList[i + 1]);
         }
-        if (i === totLength - 2) {
+        if (i === totLength - 1) {
             resList[i >> 1] = resList[i];
         }
         totLength = (totLength + 1) >> 1;
