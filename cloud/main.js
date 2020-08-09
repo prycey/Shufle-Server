@@ -1,4 +1,4 @@
-const { User } = require("parse");
+
 
 // Parse.Cloud.afterSave("_User", (request) => {
 //     const user = request.object;
@@ -108,4 +108,46 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
     tempStorage.save(null, { useMasterKey: true });
 
     return cardList;
+});
+
+
+/*
+ * expect format of cardListWithAnswers:
+ *
+ *  [
+ *      {
+ *          question: "question 1 text...",
+ *          answer: "answer to that question...",
+ *          swipe: true/false (yes/no)
+ *      },
+ *      {
+ *          ...
+ *      },
+ *      ... (x23)
+ *  ]
+ */
+Parse.Cloud.define('send_answers', async function(req, res) {
+    let user = req.user;
+
+    if (!("cardListWithAnswers" in req.params)) {
+        // request does not contain the list of cards with answers
+        return;
+    }
+
+    const cardListWithAnswers = req.params.cardListWithAnswers;
+
+    let tempStorage = await getUserTempStorage(user);
+
+    let cardList = tempStorage.get("card_list");
+
+    if (cardList === undefined) {
+        // we don't appear to have the card list matched saved, for now let's just ignore it :)
+        return;
+    }
+
+    // TODO do something with their answers
+
+    // we can now remove the current card list from temporary storage
+    tempStorage.unset("card_list");
+    tempStorage.save(null, { useMasterKey: true });
 });
