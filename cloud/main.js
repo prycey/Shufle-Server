@@ -9,6 +9,25 @@ const { User } = require("parse");
 // });
 
 
+/*
+ * tree-collapse list of queries that are all to be or-ed together
+ *
+ * i.e. queryOrAll(q1, q2, q3, q4, q5) = ((q1 || q2) || (q3 || q4)) || q5
+ */
+function queryOrAll(queryList) {
+    let resList = [...queryList];
+    let totLength = resList.length;
+    while (totLength > 1) {
+        let i = 0;
+        for (; i < totLength - 1; i += 2) {
+            resList[i >> 1] = Parse.Query.or(resList[i], resList[i + 1]);
+        }
+        totLength = (totLength + 1) >> 1;
+    }
+    return resList[0];
+}
+
+
 async function getUserTempStorage(user) {
     const TempStorage = Parse.Object.extend("TempStorage");
 
@@ -68,9 +87,10 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
     console.log("users", randomUsers);
     console.log("queries", queryList);
 
-    const cardQuery = Parse.Query.or(queryList[0], queryList[1]);
+    const cardQuery = queryOrAll(queryList);
     const cards = await cardQuery.find({ useMasterKey: true });
 
+    console.log("card query:", cardQuery);
     console.log(cards);
 
     let cardList = [];
