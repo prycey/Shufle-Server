@@ -24,6 +24,7 @@ async function getUserTempStorage(user) {
         const tempStorageQuery = new Parse.Query(TempStorage);
         tempStorage = await tempStorageQuery.get(tempStorageId, { useMasterKey: true });
     }
+    console.log(tempStorage);
     return tempStorage;
 }
 
