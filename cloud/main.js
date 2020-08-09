@@ -14,6 +14,7 @@ async function getUserTempStorage(user) {
 
     let tempStorage;
     let tempStorageId = user.get("temp_storage");
+    console.log(tempStorageId);
     if (tempStorageId === undefined) {
         // have not yet created temporary storage
         tempStorage = new TempStorage();
