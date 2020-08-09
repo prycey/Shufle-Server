@@ -16,16 +16,12 @@ const { User } = require("parse");
  */
 function queryOrAll(queryList) {
     let resList = [...queryList];
-    let totLength = resList.length;
-    while (totLength > 1) {
-        let i = 0;
-        for (; i < totLength - 1; i += 2) {
-            resList[i >> 1] = Parse.Query.or(resList[i], resList[i + 1]);
+    let dif = 1;
+    while (dif < queryList.length) {
+        for (let i = 0; i < totLength - dif; i += (2 * dif)) {
+            resList[i] = Parse.Query.or(resList[i], resList[i + dif]);
         }
-        if (i === totLength - 1) {
-            resList[i >> 1] = resList[i];
-        }
-        totLength = (totLength + 1) >> 1;
+        dif *= 2;
     }
     return resList[0];
 }
