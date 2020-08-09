@@ -18,7 +18,7 @@ async function getUserTempStorage(user) {
         // have not yet created temporary storage
         tempStorage = new TempStorage();
         user.set("temp_storage", tempStorage);
-        await user.save();
+        await user.save(null, { useMasterKey: true });
     }
     else {
         const tempStorageQuery = new Parse.Query(TempStorage);
