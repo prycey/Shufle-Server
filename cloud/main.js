@@ -1,4 +1,5 @@
 
+require('cloud/messaging.js')
 
 // Parse.Cloud.afterSave("_User", (request) => {
 //     const user = request.object;
@@ -46,7 +47,10 @@ async function getUserTempStorage(user) {
 }
 
 
-
+/*
+ * potential TODO: query for 6 users and ignore one if it happens to be yourself (can get rid of
+ * the notEqualTo constraint). Will need to test for efficiency
+ */
 Parse.Cloud.define('create_card_batch', async function(req, res) {
     let user = req.user;
 
