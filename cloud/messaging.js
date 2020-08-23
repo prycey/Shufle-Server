@@ -17,29 +17,29 @@
  */
 
 
-Parse.Cloud.define('send_message', async function(req, res) {
+// Parse.Cloud.define('send_message', async function(req, res) {
     
-});
+// });
 
 
-/*
- * queries all the most recent conversations that a user has
- *
- * return format:
- * 
- */
-Parse.Cloud.define('get_conversations', async function(req, res) {
+// /*
+//  * queries all the most recent conversations that a user has
+//  *
+//  * return format:
+//  * 
+//  */
+// Parse.Cloud.define('get_conversations', async function(req, res) {
 
-});
+// });
 
 
-/*
- * queries all the most recent messages within a given conversation
- *
- * return format:
- * 
- */
-Parse.Cloud.define('get_messages', async function(req, res) {
+// /*
+//  * queries all the most recent messages within a given conversation
+//  *
+//  * return format:
+//  * 
+//  */
+// Parse.Cloud.define('get_messages', async function(req, res) {
 
-});
+// });
 
