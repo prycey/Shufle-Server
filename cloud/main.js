@@ -9,22 +9,22 @@ Parse.Cloud.beforeSave(Parse.User, (request) => {
     //     user.set("seen_users", );
     // }
 
-    let cards = user.get("cards");
-    if (cards !== undefined) {
-        if (cards.length > cardsAPI.MAX_CARDS) {
-            throw "Cannot have more than " + cardsAPI.MAX_CARDS + " cards";
-        }
-        let seen = new Set();
-        for (let i = 0; i < cards.length; i++) {
-            let card = cards[i];
-            let q = card.get("question");
-            console.log(card, "question:", q);
-            if (seen.has(q)) {
-                throw "Cannot answer the same question twice";
-            }
-            seen.add(q);
-        }
-    }
+    // let cards = user.get("cards");
+    // if (cards !== undefined) {
+    //     if (cards.length > cardsAPI.MAX_CARDS) {
+    //         throw "Cannot have more than " + cardsAPI.MAX_CARDS + " cards";
+    //     }
+    //     let seen = new Set();
+    //     for (let i = 0; i < cards.length; i++) {
+    //         let card = cards[i];
+    //         let q = card.get("question");
+    //         console.log(card, "question:", q);
+    //         if (seen.has(q)) {
+    //             throw "Cannot answer the same question twice";
+    //         }
+    //         seen.add(q);
+    //     }
+    // }
 });
 
 
