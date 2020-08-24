@@ -31,6 +31,8 @@ Parse.Cloud.beforeSave("Card", (request) => {
         }
     });
 
+    card.set("owner", user);
+
 });
 
 Parse.Cloud.define('get_questions', async function(req, res) {
