@@ -25,6 +25,9 @@ Parse.Cloud.beforeSave("Card", async (request) => {
     query.equalTo("owner", user);
 
     const cards = await query.find({ useMasterKey: true });
+    if (cards.length === MAX_CARDS) {
+        throw "Already have the maximum number of cards";
+    }
     cards.forEach((c) => {
         if (q === c.get("question")) {
             c.destroy();
