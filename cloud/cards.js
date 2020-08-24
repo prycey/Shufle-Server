@@ -24,7 +24,7 @@ Parse.Cloud.beforeSave("Card", async (request) => {
     const query = new Parse.Query(CardClass);
     query.equalTo("owner", user);
 
-    const cards = await cardQuery.find({ useMasterKey: true });
+    const cards = await query.find({ useMasterKey: true });
     cards.forEach((c) => {
         if (q === c.get("question")) {
             c.destroy();
