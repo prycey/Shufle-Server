@@ -1,14 +1,21 @@
 
-//require('cloud/messaging.js')
+require('/app/cloud/messaging.js')
 require('/app/cloud/cards.js');
 
-// Parse.Cloud.afterSave("_User", (request) => {
-//     const user = request.object;
-//     if (user.get("seen_users") === undefined) {
-//         rel = Parse.Relation();
-//         user.set("seen_users", );
-//     }
-// });
+Parse.Cloud.beforeSave("_User", (request) => {
+    const user = request.object;
+    if (user.get("seen_users") === undefined) {
+        rel = Parse.Relation();
+        user.set("seen_users", );
+    }
+
+    let cards = user.get("cards");
+    if (cards !== undefined) {
+        if (cards.length > MAX_CARDS) {
+            throw "Cannot have more than " + MAX_CARDS + " cards";
+        }
+    }
+});
 
 
 /*
@@ -134,12 +141,7 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
 Parse.Cloud.define('send_answers', async function(req, res) {
     let user = req.user;
 
-    if (!("cardListWithAnswers" in req.params)) {
-        // request does not contain the list of cards with answers
-        return;
-    }
-
-    const cardListWithAnswers = req.params.cardListWithAnswers;
+    const cardListWithAnswers = req.params;
 
     let tempStorage = await getUserTempStorage(user);
 
