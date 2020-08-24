@@ -1,6 +1,6 @@
 
-require('/app/cloud/messaging.js')
-require('/app/cloud/cards.js');
+const msging = require('/app/cloud/messaging.js')
+const cardsAPI = require('/app/cloud/cards.js');
 
 Parse.Cloud.beforeSave(Parse.User, (request) => {
     const user = request.object;
@@ -11,8 +11,8 @@ Parse.Cloud.beforeSave(Parse.User, (request) => {
 
     let cards = user.get("cards");
     if (cards !== undefined) {
-        if (cards.length > MAX_CARDS) {
-            throw "Cannot have more than " + MAX_CARDS + " cards";
+        if (cards.length > cardsAPI.MAX_CARDS) {
+            throw "Cannot have more than " + cardsAPI.MAX_CARDS + " cards";
         }
         let seen = new Set();
         for (let i = 0; i < cards.length; i++) {
