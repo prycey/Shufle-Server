@@ -4,10 +4,10 @@ require('/app/cloud/cards.js');
 
 Parse.Cloud.beforeSave("_User", (request) => {
     const user = request.object;
-    if (user.get("seen_users") === undefined) {
-        rel = Parse.Relation();
-        user.set("seen_users", );
-    }
+    // if (user.get("seen_users") === undefined) {
+    //     rel = Parse.Relation();
+    //     user.set("seen_users", );
+    // }
 
     let cards = user.get("cards");
     if (cards !== undefined) {
