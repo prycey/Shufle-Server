@@ -1,6 +1,6 @@
 
 //require('cloud/messaging.js')
-require('cloud/cards.js');
+require('cards.js');
 
 // Parse.Cloud.afterSave("_User", (request) => {
 //     const user = request.object;
