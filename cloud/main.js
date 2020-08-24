@@ -2,7 +2,7 @@
 require('/app/cloud/messaging.js')
 require('/app/cloud/cards.js');
 
-Parse.Cloud.beforeSave("_User", (request) => {
+Parse.Cloud.beforeSave(Parse.User, (request) => {
     const user = request.object;
     // if (user.get("seen_users") === undefined) {
     //     rel = Parse.Relation();
@@ -13,6 +13,16 @@ Parse.Cloud.beforeSave("_User", (request) => {
     if (cards !== undefined) {
         if (cards.length > MAX_CARDS) {
             throw "Cannot have more than " + MAX_CARDS + " cards";
+        }
+        let seen = new Set();
+        for (let i = 0; i < cards.length; i++) {
+            let card = cards[i];
+            let q = card.get("question");
+            console.log(card, "question:", q);
+            if (seen.has(q)) {
+                throw "Cannot answer the same question twice";
+            }
+            seen.add(q);
         }
     }
 });
