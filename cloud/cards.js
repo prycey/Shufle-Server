@@ -3,7 +3,7 @@ fs = require('fs');
 const MAX_CARDS = 10;
 const NUM_QUESTIONS = 5;
 
-Parse.Cloud.beforeSave("Card", (request) => {
+Parse.Cloud.beforeSave("Card", async (request) => {
     const user = request.user;
     const card = request.object;
 
