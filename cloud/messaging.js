@@ -59,6 +59,8 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
             otherUserPtr = convo.get("user1");
         }
 
+        console.log("other:", otherUserPtr.id);
+
         const otherQuery = new Parse.Query(Parse.User);
         otherQuery.equalTo("objectId", otherUserPtr.id);
         let other = await otherQuery.find({ useMasterKey: true })[0];
