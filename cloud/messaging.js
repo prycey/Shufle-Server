@@ -72,12 +72,10 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
             otherUserPtr = convo.get("user1");
         }
 
-        console.log("other:", otherUserPtr.id);
-
         const otherQuery = new Parse.Query(Parse.User);
         otherQuery.equalTo("objectId", otherUserPtr.id);
+        otherQuery.limit(1);
         let other = await otherQuery.find({ useMasterKey: true });
-        console.log("other users:", other);
         let otherName = other[0].get("username");
 
         lastMessageAt = convo.get("timestamp");
@@ -89,7 +87,7 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
         };
     }));
 
-    let tempStorage = await util.getUserTempStorage();
+    let tempStorage = await util.getUserTempStorage(user);
 
     tempStorage.set("convo_list", convo_list);
     tempStorage.save();
@@ -121,8 +119,9 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
  * 
  */
 Parse.Cloud.define('get_messages', async function(req, res) {
+    const user = req.user;
 
-    let tempStorage = await util.getUserTempStorage();
+    let tempStorage = await util.getUserTempStorage(user);
     let convo_list = tempStorage.get("convo_list");
 
     if (!('convo_idx' in req.params)) {
