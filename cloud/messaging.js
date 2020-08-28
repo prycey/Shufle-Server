@@ -144,9 +144,9 @@ Parse.Cloud.define('get_messages', async function(req, res) {
 
 
 Parse.Cloud.define('create_random_convo', async function(req, res) {
-    // if (true) {
-    //     return;
-    // }
+    if (true) {
+        return;
+    }
     const MsgClass = Parse.Object.extend("Message");
     const ConvoClass = Parse.Object.extend("Conversation");
 
