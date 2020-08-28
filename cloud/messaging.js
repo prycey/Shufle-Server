@@ -33,11 +33,42 @@ const AUTHOR_USER2 = 1;
 /*
  * expecting a message of the format:
  * {
- *      TODO
+ *      convo_idx: <idx>,
+ *      text: "what they said..."
  * }
  */
 Parse.Cloud.define('send_message', async function(req, res) {
-    
+    const MsgClass = Parse.Object.extend("Message");
+    const user = req.user;
+
+    let tempStorage = await util.getUserTempStorage(user);
+    let convo_list = tempStorage.get("convo_list");
+
+    if (!('convo_idx' in req.params)) {
+        // no convo_idx supplied!
+        throw "no convo_idx supplied";
+    }
+    const convo_idx = req.params.convo_idx;
+    if (!Number.isInteger(convo_idx) || convo_idx < 0 || convo_idx >= convo_list.length) {
+        // invalid convo_idx
+        throw "convo_idx is not an integer or out of bounds";
+    }
+    let convo = convo_list[convo_idx];
+
+    if (!('text' in req.params)) {
+        throw "no message given";
+    }
+    const text = req.params.text;
+
+    let author = req.user.equals(convo.get("user1")) ? AUTHOR_USER1 : AUTHOR_USER2;
+
+    let msg = new MsgClass();
+    msg.set("text", text);
+    msg.set("author", author);
+    msg.set("timestamp", new Date());
+    msg.set("conversation", convo);
+
+    msg.save();
 });
 
 
