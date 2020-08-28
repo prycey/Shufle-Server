@@ -62,13 +62,19 @@ Parse.Cloud.define('send_message', async function(req, res) {
 
     let author = req.user.equals(convo.get("user1")) ? AUTHOR_USER1 : AUTHOR_USER2;
 
+    const time = new Date();
+
     let msg = new MsgClass();
     msg.set("text", text);
     msg.set("author", author);
-    msg.set("timestamp", new Date());
+    msg.set("timestamp", time);
     msg.set("conversation", convo);
 
-    msg.save();
+    msg.save(null, { useMasterKey: true });
+
+    convo.set("last_message", text);
+    convo.set("timestamp", time);
+    convo.save(null, { useMasterKey: true });
 });
 
 
@@ -120,7 +126,7 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
     let tempStorage = await util.getUserTempStorage(user);
 
     tempStorage.set("convo_list", convo_list);
-    tempStorage.save();
+    tempStorage.save(null, { useMasterKey: true });
 
     return convo_list;
 });
@@ -210,10 +216,10 @@ Parse.Cloud.define('create_random_convo', async function(req, res) {
     msg2.set("timestamp", new Date());
     msg2.set("conversation", convo);
 
-    msg1.save();
-    msg2.save();
+    msg1.save(null, { useMasterKey: true });
+    msg2.save(null, { useMasterKey: true });
 
     convo.set("last_message", msg2.get("text"));
     convo.set("timestamp", msg2.get("timestamp"));
-    convo.save();
+    convo.save(null, { useMasterKey: true });
 });
