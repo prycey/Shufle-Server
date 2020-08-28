@@ -44,6 +44,10 @@ Parse.Cloud.define('send_message', async function(req, res) {
     let tempStorage = await util.getUserTempStorage(user);
     let convo_list = tempStorage.get("convo_list");
 
+    if (convo_list === undefined) {
+        throw "no conversations have been initiated yet";
+    }
+
     if (!('convo_idx' in req.params)) {
         // no convo_idx supplied!
         throw "no convo_idx supplied";
