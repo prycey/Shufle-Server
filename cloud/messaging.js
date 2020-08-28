@@ -47,6 +47,7 @@ Parse.Cloud.define('send_message', async function(req, res) {
     if (convo_list === undefined) {
         throw "no conversations have been initiated yet";
     }
+    console.log("convo list:", convo_list);
 
     if (!('convo_idx' in req.params)) {
         // no convo_idx supplied!
