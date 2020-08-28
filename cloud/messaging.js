@@ -42,8 +42,8 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
     const user = req.user;
 
     const ConvoClass = Parse.Object.extend("Conversation");
-    const query1 = Parse.Query(ConvoClass);
-    const query2 = Parse.Query(ConvoClass);
+    const query1 = new Parse.Query(ConvoClass);
+    const query2 = new Parse.Query(ConvoClass);
     query1.equalTo("user1", user);
     query2.equalTo("user2", user);
     const query = Parse.Query.or(query1, query2);
@@ -59,7 +59,7 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
             otherUserPtr = convo.get("user1");
         }
 
-        const otherQuery = Parse.Query(Parse.User);
+        const otherQuery = new Parse.Query(Parse.User);
         otherQuery.equalTo("objectId", otherUserPtr.id);
         let other = await otherQuery.find({ useMasterKey: true });
         let otherName = other.get("username");
@@ -91,10 +91,10 @@ Parse.Cloud.define('get_messages', async function(req, res) {
 Parse.Cloud.define('create_random_convo', async function(req, res) {
     const ConvoClass = Parse.Object.extend("Conversation");
 
-    const user1q = Parse.Query(Parse.User);
+    const user1q = new Parse.Query(Parse.User);
     user1q.equalTo("objectId", "PbY2FyGu1g");
     let user1 = await user1q.find({ useMasterKey: true });
-    const user2q = Parse.Query(Parse.User);
+    const user2q = new Parse.Query(Parse.User);
     user2q.equalTo("objectId", "c7loOCLvrj");
     let user2 = await user2q.find({ useMasterKey: true });
 
