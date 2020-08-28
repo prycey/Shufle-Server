@@ -105,7 +105,7 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
 
     const convos = await query.find({ useMasterKey: true });
 
-    let convo_list = Promise.all(convos.map(async (convo) => {
+    let convo_list = await Promise.all(convos.map(async (convo) => {
         let otherUserPtr;
         console.log("convo:", convo);
         if (convo.get("user1").equals(user)) {
@@ -130,7 +130,7 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
 
     let tempStorage = await util.getUserTempStorage(user);
 
-    tempStorage.set("convo_list", [...convo_list]);
+    tempStorage.set("convo_list", convo_list);
     tempStorage.save(null, { useMasterKey: true });
 
     return convo_list;
