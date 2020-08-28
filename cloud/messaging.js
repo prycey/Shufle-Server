@@ -5,6 +5,7 @@
  * {
  *      user1: user1_ptr,
  *      user2: user2_ptr,
+ *      last_message: "...",
  *      timesamp: <last time a message was sent>
  * }
  * 
@@ -78,12 +79,10 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
         let other = await otherQuery.find({ useMasterKey: true });
         let otherName = other[0].get("username");
 
-        lastMessageAt = convo.get("timestamp");
-
         return {
             user_name: otherName,
-            last_message: "not yet implemented",
-            timestamp: lastMessageAt
+            last_message: convo.get("last_message"),
+            timestamp: convo.get("timestamp")
         };
     }));
 
@@ -145,9 +144,9 @@ Parse.Cloud.define('get_messages', async function(req, res) {
 
 
 Parse.Cloud.define('create_random_convo', async function(req, res) {
-    if (true) {
-        return;
-    }
+    // if (true) {
+    //     return;
+    // }
     const MsgClass = Parse.Object.extend("Message");
     const ConvoClass = Parse.Object.extend("Conversation");
 
@@ -182,4 +181,8 @@ Parse.Cloud.define('create_random_convo', async function(req, res) {
 
     msg1.save();
     msg2.save();
+
+    convo.set("last_message", msg2.get("text"));
+    convo.set("timestamp", msg2.get("timestamp"));
+    convo.save();
 });
