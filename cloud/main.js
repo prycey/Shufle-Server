@@ -1,6 +1,7 @@
 
 const msging = require('/app/cloud/messaging.js')
 const cardsAPI = require('/app/cloud/cards.js');
+const util = require('/app/cloud/util.js');
 
 Parse.Cloud.beforeSave(Parse.User, (request) => {
     const user = request.object;
@@ -29,50 +30,13 @@ Parse.Cloud.beforeSave(Parse.User, (request) => {
 
 
 /*
- * tree-collapse list of queries that are all to be or-ed together
- *
- * i.e. queryOrAll(q1, q2, q3, q4, q5) = ((q1 || q2) || (q3 || q4)) || q5
- */
-function queryOrAll(queryList) {
-    let resList = [...queryList];
-    let dif = 1;
-    while (dif < queryList.length) {
-        for (let i = 0; i < queryList.length - dif; i += (2 * dif)) {
-            resList[i] = Parse.Query.or(resList[i], resList[i + dif]);
-        }
-        dif *= 2;
-    }
-    return resList[0];
-}
-
-
-async function getUserTempStorage(user) {
-    const TempStorage = Parse.Object.extend("TempStorage");
-
-    let tempStorage;
-    let tempStorageId = user.get("temp_storage");
-    if (tempStorageId === undefined) {
-        // have not yet created temporary storage
-        tempStorage = new TempStorage();
-        user.set("temp_storage", tempStorage);
-        await user.save(null, { useMasterKey: true });
-    }
-    else {
-        const tempStorageQuery = new Parse.Query(TempStorage);
-        tempStorage = await tempStorageQuery.get(tempStorageId.id, { useMasterKey: true });
-    }
-    return tempStorage;
-}
-
-
-/*
  * potential TODO: query for 6 users and ignore one if it happens to be yourself (can get rid of
  * the notEqualTo constraint). Will need to test for efficiency
  */
 Parse.Cloud.define('create_card_batch', async function(req, res) {
     let user = req.user;
 
-    let tempStoragePromise = getUserTempStorage(user);
+    let tempStoragePromise = util.getUserTempStorage(user);
 
     // query 5 random users, excluding ourself, who we have not yet seen
     // (whenever another user's cards have been dealt to someone, they add
@@ -108,7 +72,7 @@ Parse.Cloud.define('create_card_batch', async function(req, res) {
     console.log("users", randomUsers);
     console.log("queries", queryList);
 
-    const cardQuery = queryOrAll(queryList);
+    const cardQuery = util.queryOrAll(queryList);
     const cards = await cardQuery.find({ useMasterKey: true });
 
     console.log("card query:", cardQuery);
@@ -153,7 +117,7 @@ Parse.Cloud.define('send_answers', async function(req, res) {
 
     const cardListWithAnswers = req.params;
 
-    let tempStorage = await getUserTempStorage(user);
+    let tempStorage = await util.getUserTempStorage(user);
 
     let cardList = tempStorage.get("card_list");
 

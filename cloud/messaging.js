@@ -17,6 +17,18 @@
  * }
  */
 
+
+const util = require('/app/cloud/util.js');
+
+
+// for use on frontend storage of messages
+const AUTHOR_SELF = 0;
+const AUTHOR_OTHER = 1;
+
+// for use on backend storage of messages
+const AUTHOR_USER1 = 0;
+const AUTHOR_USER2 = 1;
+
 /*
  * expecting a message of the format:
  * {
@@ -75,6 +87,11 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
         };
     }));
 
+    let tempStorage = await util.userTempStorage();
+
+    tempStorage.set("convo_list", convo_list);
+    tempStorage.save();
+
     return convo_list;
 });
 
@@ -82,28 +99,83 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
 /*
  * queries all the most recent messages within a given conversation
  *
- * return format:
+ * adjusted format of queried conversation:
+ *  {
+ *      user_name: "...",
+ *      last_message: "...",
+ *      timestamp: <time_of_last_message>,
+ *      messages: [
+ *          {
+ *              text: "message 1",
+ *              author: AUTHOR_SELF or AUTHOR_OTHER,
+ *              timestamp: <time_message_was_sent>
+ *          },
+ *          {
+ *              ...
+ *          },
+ *          ...
+ *      ]
+ *  }
  * 
  */
 Parse.Cloud.define('get_messages', async function(req, res) {
 
+    let tempStorage = await util.userTempStorage();
+    let convo_list = tempStorage.get("convo_list");
+
+    if (!('convo_idx' in req.params)) {
+        // no convo_idx supplied!
+        throw "no convo_idx supplied";
+    }
+    const convo_idx = req.params.convo_idx;
+    if (!Number.isInteger(convo_idx) || convo_idx < 0 || convo_idx >= convo_list.length) {
+        // invalid convo_idx
+        throw "convo_idx is not an integer or out of bounds";
+    }
+    let convo = convo_list[convo_idx];
+
+    if (convo.has('messages')) {
+        return convo.get('messages');
+    }
+
+    // query server for messages
+
 });
 
 
-// Parse.Cloud.define('create_random_convo', async function(req, res) {
-//     const ConvoClass = Parse.Object.extend("Conversation");
+Parse.Cloud.define('create_random_convo', async function(req, res) {
+    const MsgClass = Parse.Object.extend("Message");
+    const ConvoClass = Parse.Object.extend("Conversation");
 
-//     const user1q = new Parse.Query(Parse.User);
-//     user1q.equalTo("objectId", "PbY2FyGu1g");
-//     let user1 = await user1q.find({ useMasterKey: true });
-//     const user2q = new Parse.Query(Parse.User);
-//     user2q.equalTo("objectId", "c7loOCLvrj");
-//     let user2 = await user2q.find({ useMasterKey: true });
+    // const user1q = new Parse.Query(Parse.User);
+    // user1q.equalTo("objectId", "PbY2FyGu1g");
+    // let user1 = await user1q.find({ useMasterKey: true });
+    // const user2q = new Parse.Query(Parse.User);
+    // user2q.equalTo("objectId", "c7loOCLvrj");
+    // let user2 = await user2q.find({ useMasterKey: true });
 
-//     let convo = new ConvoClass();
-//     convo.set("user1", user1[0]);
-//     convo.set("user2", user2[0]);
-//     convo.set("timestamp", new Date());
+    // let convo = new ConvoClass();
+    // convo.set("user1", user1[0]);
+    // convo.set("user2", user2[0]);
+    // convo.set("timestamp", new Date());
 
-//     convo.save();
-// });
+    let convoq = new Parse.Query(ConvoClass);
+    let convos = await convoq.find({ useMasterKey: true });
+
+    let convo = convos[0];
+
+    let msg1 = new MsgClass();
+    msg1.set("text", "I love Remy");
+    msg1.set("author", AUTHOR_USER1);
+    msg1.set("timestamp", new Date());
+    msg1.set("conversation", convo);
+
+    let msg2 = new MsgClass();
+    msg2.set("text", "I also love Remy");
+    msg2.set("author", AUTHOR_USER2);
+    msg2.set("timestamp", new Date());
+    msg2.set("conversation", convo);
+
+    msg1.save();
+    msg2.save();
+});
