@@ -64,6 +64,7 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
 
     let convo_list = Promise.all(convos.map(async (convo) => {
         let otherUserPtr;
+        console.log("convo:", convo);
         if (convo.get("user1").equals(user)) {
             otherUserPtr = convo.get("user2");
         }
@@ -76,6 +77,7 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
         const otherQuery = new Parse.Query(Parse.User);
         otherQuery.equalTo("objectId", otherUserPtr.id);
         let other = await otherQuery.find({ useMasterKey: true });
+        console.log("other users:", other);
         let otherName = other[0].get("username");
 
         lastMessageAt = convo.get("timestamp");
