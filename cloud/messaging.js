@@ -61,7 +61,7 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
 
         const otherQuery = new Parse.Query(Parse.User);
         otherQuery.equalTo("objectId", otherUserPtr.id);
-        let other = await otherQuery.find({ useMasterKey: true });
+        let other = await otherQuery.find({ useMasterKey: true })[0];
         let otherName = other.get("username");
 
         lastMessageAt = convo.get("timestamp");
