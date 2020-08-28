@@ -99,8 +99,8 @@ Parse.Cloud.define('create_random_convo', async function(req, res) {
     let user2 = await user2q.find({ useMasterKey: true });
 
     let convo = new ConvoClass();
-    convo.set("user1", user1);
-    convo.set("user2", user2);
+    convo.set("user1", user1[0]);
+    convo.set("user2", user2[0]);
     convo.set("timestamp", new Date());
 
     convo.save();
