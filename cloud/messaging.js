@@ -87,7 +87,7 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
         };
     }));
 
-    let tempStorage = await util.userTempStorage();
+    let tempStorage = await util.getUserTempStorage();
 
     tempStorage.set("convo_list", convo_list);
     tempStorage.save();
@@ -120,7 +120,7 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
  */
 Parse.Cloud.define('get_messages', async function(req, res) {
 
-    let tempStorage = await util.userTempStorage();
+    let tempStorage = await util.getUserTempStorage();
     let convo_list = tempStorage.get("convo_list");
 
     if (!('convo_idx' in req.params)) {
