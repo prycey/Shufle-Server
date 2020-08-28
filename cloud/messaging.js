@@ -130,7 +130,7 @@ Parse.Cloud.define('get_conversations', async function(req, res) {
 
     let tempStorage = await util.getUserTempStorage(user);
 
-    tempStorage.set("convo_list", convo_list);
+    tempStorage.set("convo_list", [...convo_list]);
     tempStorage.save(null, { useMasterKey: true });
 
     return convo_list;
