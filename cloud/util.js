@@ -5,7 +5,7 @@
  *
  * i.e. queryOrAll(q1, q2, q3, q4, q5) = ((q1 || q2) || (q3 || q4)) || q5
  */
-export function queryOrAll(queryList) {
+function queryOrAll(queryList) {
     let resList = [...queryList];
     let dif = 1;
     while (dif < queryList.length) {
@@ -18,7 +18,7 @@ export function queryOrAll(queryList) {
 }
 
 
-export async function getUserTempStorage(user) {
+async function getUserTempStorage(user) {
     const TempStorage = Parse.Object.extend("TempStorage");
 
     let tempStorage;
@@ -35,3 +35,6 @@ export async function getUserTempStorage(user) {
     }
     return tempStorage;
 }
+
+exports.queryOrAll = queryOrAll;
+exports.getUserTempStorage = getUserTempStorage;
