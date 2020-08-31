@@ -175,11 +175,17 @@ Parse.Cloud.define('get_messages', async function(req, res) {
         throw "convo_idx is not an integer or out of bounds";
     }
     let convo = convo_list[convo_idx];
+
+    const convoClass = Parse.Object.extend('Conversation');
+    const convoQuery = new Parse.Query(convoClass);
+    convoQuery.equalsTo("objectId", convo.id);
+    convo = await convoQuery.find({ useMasterKey: true });
+
     console.log("convo list:", convo_list, convo_idx, convo);
 
-    if (convo.has('messages')) {
-        return convo.get('messages');
-    }
+    // if (convo.has('messages')) {
+    //     return convo.get('messages');
+    // }
 
     let users = [convo.get("user1"), convo.get("user2")];
 
