@@ -164,7 +164,6 @@ Parse.Cloud.define('get_messages', async function(req, res) {
 
     let tempStorage = await util.getUserTempStorage(user);
     let convo_list = tempStorage.get("convo_list");
-    console.log("convo list:", convo_list);
 
     if (!('convo_idx' in req.params)) {
         // no convo_idx supplied!
@@ -176,6 +175,7 @@ Parse.Cloud.define('get_messages', async function(req, res) {
         throw "convo_idx is not an integer or out of bounds";
     }
     let convo = convo_list[convo_idx];
+    console.log("convo list:", convo_list, convo_idx, convo);
 
     if (convo.has('messages')) {
         return convo.get('messages');
