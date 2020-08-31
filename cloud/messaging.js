@@ -180,29 +180,50 @@ Parse.Cloud.define('get_messages', async function(req, res) {
         return convo.get('messages');
     }
 
-    // query server for messages
+    let users = [convo.get("user1"), convo.get("user2")];
 
+    // TODO query server for messages
+    const MsgClass = Parse.Object.extend("Message");
+    let msgQuery = new Parse.Query(MsgClass);
+    msgQuery.equalTo("conversation", convo);
+    let parseMsgs = await msgQuery.find({ useMasterKey: true });
+
+    let msgs = [];
+    for (let i = 0; i < parseMsgs.length; i++) {
+        let authorIdx = parseMsgs[i].get("author");
+        let author = users[authorIdx];
+
+        let authorField = author.equals(user) ? AUTHOR_SELF : AUTHOR_OTHER;
+
+        msgs.push({
+            text: parseMsgs[i].get("text"),
+            timestamp: parseMsgs[i].get("timestamp"),
+            author: authorField
+        });
+    }
+
+    return msgs;
 });
 
 
 Parse.Cloud.define('create_random_convo', async function(req, res) {
-    if (true) {
-        return;
-    }
+    // if (true) {
+    //     return;
+    // }
     const MsgClass = Parse.Object.extend("Message");
     const ConvoClass = Parse.Object.extend("Conversation");
 
-    // const user1q = new Parse.Query(Parse.User);
-    // user1q.equalTo("objectId", "PbY2FyGu1g");
-    // let user1 = await user1q.find({ useMasterKey: true });
-    // const user2q = new Parse.Query(Parse.User);
-    // user2q.equalTo("objectId", "c7loOCLvrj");
-    // let user2 = await user2q.find({ useMasterKey: true });
+    const user1q = new Parse.Query(Parse.User);
+    user1q.equalTo("objectId", "PbY2FyGu1g");
+    let user1 = await user1q.find({ useMasterKey: true });
+    const user2q = new Parse.Query(Parse.User);
+    user2q.equalTo("objectId", "c7loOCLvrj");
+    let user2 = await user2q.find({ useMasterKey: true });
 
-    // let convo = new ConvoClass();
-    // convo.set("user1", user1[0]);
-    // convo.set("user2", user2[0]);
-    // convo.set("timestamp", new Date());
+    let convo = new ConvoClass();
+    convo.set("user1", user1[0]);
+    convo.set("user2", user2[0]);
+    convo.set("timestamp", new Date());
 
     let convoq = new Parse.Query(ConvoClass);
     let convos = await convoq.find({ useMasterKey: true });
@@ -223,6 +244,13 @@ Parse.Cloud.define('create_random_convo', async function(req, res) {
 
     msg1.save(null, { useMasterKey: true });
     msg2.save(null, { useMasterKey: true });
+
+    let acl = new Parse.ACL();
+    acl.setWriteAccess(user1.id, true);
+    acl.setReadAccess(user1.id, true);
+    acl.setWriteAccess(user2.id, true);
+    acl.setReadAccess(user2.id, true);
+    convo.setACL(acl);
 
     convo.set("last_message", msg2.get("text"));
     convo.set("timestamp", msg2.get("timestamp"));
