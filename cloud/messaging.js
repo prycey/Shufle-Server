@@ -164,6 +164,7 @@ Parse.Cloud.define('get_messages', async function(req, res) {
 
     let tempStorage = await util.getUserTempStorage(user);
     let convo_list = tempStorage.get("convo_list");
+    console.log("convo list:", convo_list);
 
     if (!('convo_idx' in req.params)) {
         // no convo_idx supplied!
@@ -189,7 +190,6 @@ Parse.Cloud.define('get_messages', async function(req, res) {
     let parseMsgs = await msgQuery.find({ useMasterKey: true });
 
     let msgs = [];
-    console.log("users:", users);
     for (let i = 0; i < parseMsgs.length; i++) {
         console.log("message:", parseMsgs[i], parseMsgs[i].get("author"));
         let authorIdx = parseMsgs[i].get("author");
