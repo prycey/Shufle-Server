@@ -246,10 +246,10 @@ Parse.Cloud.define('create_random_convo', async function(req, res) {
     msg2.save(null, { useMasterKey: true });
 
     let acl = new Parse.ACL();
-    acl.setWriteAccess(user1.id, true);
-    acl.setReadAccess(user1.id, true);
-    acl.setWriteAccess(user2.id, true);
-    acl.setReadAccess(user2.id, true);
+    acl.setWriteAccess(user1[0].id, true);
+    acl.setReadAccess(user1[0].id, true);
+    acl.setWriteAccess(user2[0].id, true);
+    acl.setReadAccess(user2[0].id, true);
     convo.setACL(acl);
 
     convo.set("last_message", msg2.get("text"));
