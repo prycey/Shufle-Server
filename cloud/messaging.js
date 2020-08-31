@@ -189,6 +189,7 @@ Parse.Cloud.define('get_messages', async function(req, res) {
     let parseMsgs = await msgQuery.find({ useMasterKey: true });
 
     let msgs = [];
+    console.log("users:", users);
     for (let i = 0; i < parseMsgs.length; i++) {
         console.log("message:", parseMsgs[i], parseMsgs[i].get("author"));
         let authorIdx = parseMsgs[i].get("author");
