@@ -178,7 +178,7 @@ Parse.Cloud.define('get_messages', async function(req, res) {
 
     const convoClass = Parse.Object.extend('Conversation');
     const convoQuery = new Parse.Query(convoClass);
-    convoQuery.equalsTo("objectId", convo.id);
+    convoQuery.equalTo("objectId", convo.id);
     convo = await convoQuery.find({ useMasterKey: true });
 
     console.log("convo list:", convo_list, convo_idx, convo);
