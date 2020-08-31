@@ -207,28 +207,28 @@ Parse.Cloud.define('get_messages', async function(req, res) {
 
 
 Parse.Cloud.define('create_random_convo', async function(req, res) {
-    // if (true) {
-    //     return;
-    // }
+    if (true) {
+        return;
+    }
     const MsgClass = Parse.Object.extend("Message");
     const ConvoClass = Parse.Object.extend("Conversation");
 
-    const user1q = new Parse.Query(Parse.User);
-    user1q.equalTo("objectId", "PbY2FyGu1g");
-    let user1 = await user1q.find({ useMasterKey: true });
-    const user2q = new Parse.Query(Parse.User);
-    user2q.equalTo("objectId", "c7loOCLvrj");
-    let user2 = await user2q.find({ useMasterKey: true });
+    // const user1q = new Parse.Query(Parse.User);
+    // user1q.equalTo("objectId", "PbY2FyGu1g");
+    // let user1 = await user1q.find({ useMasterKey: true });
+    // const user2q = new Parse.Query(Parse.User);
+    // user2q.equalTo("objectId", "c7loOCLvrj");
+    // let user2 = await user2q.find({ useMasterKey: true });
 
-    let convo = new ConvoClass();
-    convo.set("user1", user1[0]);
-    convo.set("user2", user2[0]);
-    convo.set("timestamp", new Date());
+    // let convo = new ConvoClass();
+    // convo.set("user1", user1[0]);
+    // convo.set("user2", user2[0]);
+    // convo.set("timestamp", new Date());
 
-    // let convoq = new Parse.Query(ConvoClass);
-    // let convos = await convoq.find({ useMasterKey: true });
+    let convoq = new Parse.Query(ConvoClass);
+    let convos = await convoq.find({ useMasterKey: true });
 
-    // let convo = convos[0];
+    let convo = convos[0];
 
     let msg1 = new MsgClass();
     msg1.set("text", "I love Remy");
@@ -245,12 +245,12 @@ Parse.Cloud.define('create_random_convo', async function(req, res) {
     msg1.save(null, { useMasterKey: true });
     msg2.save(null, { useMasterKey: true });
 
-    let acl = new Parse.ACL();
-    acl.setWriteAccess(user1[0].id, true);
-    acl.setReadAccess(user1[0].id, true);
-    acl.setWriteAccess(user2[0].id, true);
-    acl.setReadAccess(user2[0].id, true);
-    convo.setACL(acl);
+    // let acl = new Parse.ACL();
+    // acl.setWriteAccess(user1[0].id, true);
+    // acl.setReadAccess(user1[0].id, true);
+    // acl.setWriteAccess(user2[0].id, true);
+    // acl.setReadAccess(user2[0].id, true);
+    // convo.setACL(acl);
 
     convo.set("last_message", msg2.get("text"));
     convo.set("timestamp", msg2.get("timestamp"));
