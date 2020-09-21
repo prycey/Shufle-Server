@@ -189,7 +189,6 @@ Parse.Cloud.define('get_messages', async function(req, res) {
 
     let users = [convo.get("user1"), convo.get("user2")];
 
-    // TODO query server for messages
     const MsgClass = Parse.Object.extend("Message");
     let msgQuery = new Parse.Query(MsgClass);
     msgQuery.equalTo("conversation", convo);
